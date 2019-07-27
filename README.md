@@ -1,2 +1,2 @@
-# UnnecessaryScripte
- Some unnecessary scripte
+# UnnecessaryScripts
+ Some unnecessary scripts
