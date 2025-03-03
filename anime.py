@@ -9,8 +9,8 @@ import shlex
 import struct
 import platform
 import subprocess
- 
- 
+import argparse
+
 def get_terminal_size():
     current_os = platform.system()
     tuple_xy = None
@@ -94,8 +94,6 @@ dir = [0, 1, 2, 3]
 
 colors = [Fore.CYAN, Fore.GREEN, Fore.RED, Fore.WHITE]
 
-#yMax = 25
-#xMax = 100
 xMax, yMax = get_terminal_size()
 
 def move(a, i):
@@ -106,8 +104,8 @@ def move(a, i):
 		y[i]-=1
 		x[i]+=1
 		if y[i] < 0:
-			y[i]=yMax
-		if x[i] >= xMax:
+			y[i]=yMax-1
+		if x[i] >= xMax-1:
 			x[i]=0
 		print(pos(x[i], y[i]) + colors[i] + ch);
 	elif a == 1:
@@ -116,8 +114,8 @@ def move(a, i):
 		x[i]-=1
 		y[i]+=1
 		if x[i] < 0:
-			x[i]=xMax
-		if y[i] >= yMax:
+			x[i]=xMax-1
+		if y[i] >= yMax-1:
 			y[i]=0
 		print(pos(x[i], y[i]) + colors[i] + ch);
 	elif a == 2:
@@ -126,18 +124,18 @@ def move(a, i):
 		y[i]-=1
 		x[i]-=1
 		if x[i] < 0:
-			x[i]=xMax
+			x[i]=xMax-1
 		if y[i] < 0:
-			y[i]=yMax	
+			y[i]=yMax-1
 		print(pos(x[i], y[i]) + colors[i] + ch);
 	elif a == 3:
 		ch = "\\"
 		#if y[i] < 20 and x[i] < 20:
 		y[i]+=1
 		x[i]+=1
-		if y[i] >= yMax:
+		if y[i] >= yMax-1:
 			y[i]=0
-		if x[i] >= xMax:
+		if x[i] >= xMax-1:
 			x[i]=0
 		print(pos(x[i], y[i]) + colors[i] + ch);
 			
@@ -189,19 +187,19 @@ def move1(a, i):
 	if a == 0:
 		ch = "─"
 		x[i]+=1
-		if x[i] >= xMax:
+		if x[i] >= xMax-1:
 			x[i]=0
 		print(pos(x[i], y[i]) + colors[i] + ch);
 	elif a == 1:
 		ch = "─"
 		x[i]-=1
 		if x[i] < 0:
-			x[i]=xMax
+			x[i]=xMax-1
 		print(pos(x[i], y[i]) + colors[i] + ch);
 	elif a == 2:
 		ch = "|"
 		y[i]+=1
-		if y[i] > yMax:
+		if y[i] > yMax-1:
 			y[i]=0
 		print(pos(x[i], y[i]) + colors[i] + ch);
 	elif a == 3:
@@ -212,8 +210,9 @@ def move1(a, i):
 		print(pos(x[i], y[i]) + colors[i] + ch.encode);
 			
 def newMove1(i):
+	ch=""
 	if dir[i] == 0:#x++
-		if x[i] < xMax:
+		if x[i] < xMax-1:
 			#x[i]+=1 ch="┛"; dir[i] = 3
 			x[i]+=1; ch="\\"; dir[i] = 2
 	#		print(pos(x[i], y[i]) + colors[i] + str(ch).strip().encode('utf-8'));
@@ -223,7 +222,7 @@ def newMove1(i):
 			#x[i]-=1; ch=""; dir[i] = 3
 	#		print(pos(x[i], y[i]) + colors[i] + str(ch).strip().encode('utf-8'));
 	elif dir[i] == 2:
-		if y[i] < yMax:
+		if y[i] < yMax-1:
 			#y[i]+=1; ch="┗"; dir[i]=0
 			y[i]+=1; ch="/"; dir[i]=1
 	#		print(pos(x[i], y[i]) + colors[i] + str(ch).strip().encode('utf-8'));
@@ -259,11 +258,21 @@ def anime1():
 			newMove1(2)
 		move1(dir[2], 2)
 		
-os.system('cls')
-#os.system('clear')
+OS = platform.system()
+if OS == "Windows":
+	os.system('cls')
+else:
+	os.system('clear')
 colorama.init()
-anime()
 
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(prog="Line animation", description='Line console animation.')
+	parser.add_argument('-type', type=int, help="Animation type: 1 or 2")
+	args = parser.parse_args()
+	if args.type is not None and args.type == 1:
+		anime()
+	else:
+		anime1()
 
 
 

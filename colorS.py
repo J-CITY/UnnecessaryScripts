@@ -1,21 +1,25 @@
 from colorama import Fore, Back, Style
 import os
 import colorama
-import random
+import argparse
+import platform
 
-
-#foreColor = [Fore.BLACK, Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, 
-#	Fore.MAGENTA, Fore.CYAN, Fore.WHITE]
-#backColor = [Back.BLACK, Back.RED, Back.GREEN, Back.YELLOW, Back.BLUE, 
-#	Back.MAGENTA, Back.CYAN, Back.WHITE]
-foreColor = [30,31,32,33,34,35,36,37]
-
-backColor = [40,41,42,43,44,45,46,47]
+foreColor = [Fore.BLACK, Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, 
+	Fore.MAGENTA, Fore.CYAN, Fore.WHITE]
+backColor = [Back.BLACK, Back.RED, Back.GREEN, Back.YELLOW, Back.BLUE, 
+	Back.MAGENTA, Back.CYAN, Back.WHITE]
+#foreColor = [30,31,32,33,34,35,36,37]
+#backColor = [40,41,42,43,44,45,46,47]
 
 def pos(x, y):
 	return "\033[%d;%dH" % (y, x)
+
+#def printstr(s, colorFG, colorBG, x, y):
+#	print(pos(x, y) + '\x1b['+str(22)+";"+str(colorFG) + ";" + str(colorBG)+"m" + s +'\x1b[0m')
+
 def printstr(s, colorFG, colorBG, x, y):
-	print(pos(x, y) + '\x1b['+Style.NORMAL +";"+str(colorFG) + ";" + str(colorBG)+"m" + s +'\x1b[0m')
+	print(pos(x, y) +  colorFG + colorBG + s)
+
 
 one = ["   ",
 "   ",
@@ -31,7 +35,11 @@ def printCude(str, colorFG, colorBG, x, y):
 		printstr(s, colorFG, colorBG, x, y+i)
 
 		
-os.system('cls')
+OS = platform.system()
+if OS == "Windows":
+	os.system('cls')
+else:
+	os.system('clear')
 colorama.init()
 
 def printShemeRect():
@@ -54,7 +62,7 @@ casper = [
 "      #### ",
 "          #"]
 
-def printShemeRect():
+def printShemeRect2():
 	step = len(casper[0]) + 2
 	for i, color in enumerate(backColor):
 		for stri, str in enumerate(casper):
@@ -63,11 +71,10 @@ def printShemeRect():
 					printstr(' ', Fore.WHITE, color, step*i+si, 1+stri)
 				else:
 					pass
-#printShemeRect()
+#printShemeRect2()
 
 
-def print_format_table():
-
+def printFormatTable():
     for style in range(8):
         for fg in range(30,38):
             s1 = ''
@@ -77,5 +84,16 @@ def print_format_table():
             print(s1)
         print('\n')
 
-print_format_table()
+#printFormatTable()
 
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(prog="Color test script", description='Print color scheme to console.')
+	parser.add_argument('-type', type=str, help="Visual type: cube, casper or table")
+
+	args = parser.parse_args()
+	if args.type is not None and args.type == "cube":
+		printShemeRect()
+	elif args.type is not None and args.type == "casper":
+		printShemeRect2()
+	else:
+		printFormatTable()
